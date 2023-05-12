@@ -6,7 +6,7 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import "./Services.css";
 const ServiceCard = ({ service }) => {
   console.log(service);
-  const { title, img, price } = service;
+  const { title, img, price,_id } = service;
   return (
     <div className="service-card-body p-5 pb-10">
       <img
@@ -17,7 +17,7 @@ const ServiceCard = ({ service }) => {
       <p className="text-3xl font-bold py-3">{title}</p>
       <div className="flex justify-between text-orange-600 text-xl font-semibold">
         <p>Price: ${price}</p>
-        <Link className="font-normal">
+        <Link to={`/checkout/${_id}`} className="font-normal">
           <FontAwesomeIcon icon={faArrowRight} />
         </Link>
       </div>

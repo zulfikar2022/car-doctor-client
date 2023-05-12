@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import ServiceCard from "./ServiceCard";
 import { Link } from "react-router-dom";
 
-const Services = () => {
-  const [services, setServices] = useState(null);
-  useEffect(() => {
-    fetch("services.json")
-      .then((res) => res.json())
-      .then((data) => setServices(data));
-  }, []);
+const Services = ({allData}) => {
+
+  const [services, setServices] = useState(allData);
+
 
   return (
     <div className="my-8">
@@ -22,9 +19,9 @@ const Services = () => {
         </p>
       </div>
       <div className="grid grid-cols-3 gap-6 my-7 ">
-        {/* {services.map((service) => (
+        {services.map((service) => (
           <ServiceCard key={service._id} service={service}></ServiceCard>
-        ))} */}
+        ))}
       </div>
       
 

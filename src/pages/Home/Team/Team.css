@@ -4,8 +4,10 @@
     gap: 25px;
 }
 .social-media-logo{
+
     width: 30px;
     border-radius: 50%;
     padding-bottom: 60px;
-    justify-content: space-evenly
+    justify-content: space-around;
+    
 }

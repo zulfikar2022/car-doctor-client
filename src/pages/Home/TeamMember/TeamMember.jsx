@@ -1,3 +1,4 @@
+import '../Team/Team.css'
 const TeamMember = ({ img }) => {
   return (
     <div className="service-card-body p-5 pb-10">
@@ -9,7 +10,7 @@ const TeamMember = ({ img }) => {
       <p className="text-3xl font-bold pt-3">{"Car Engine Plug"}</p>
       <p className="text-xl text-slate-400 pb-3">{"Engine Expert"}</p>
 
-      <div className="social-media flex">
+      <div className="social-media flex justify-around">
         <img
           className="social-media-logo"
           src="https://i.ibb.co/n0tC58n/linkedIn.png"

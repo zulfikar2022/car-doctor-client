@@ -1,9 +1,21 @@
 import { Link } from "react-router-dom";
 import "./NavBar.css";
 import logo from "../../../assets/logo.svg";
+import { useContext } from "react";
+import { AuthContext } from "../../../Providers/AuthProviders";
 
-const NabBar = () => {
-
+const NavBar = () => {
+  const { user, logOut } = useContext(AuthContext);
+  console.log(user);
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        console.log('log out successfully');
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  };
 
   return (
     <div className="navbar bg-base-100 h-10 mb-4 mt-8">
@@ -30,20 +42,40 @@ const NabBar = () => {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link to={'/'} className="font-bold">Home</Link>
+              <Link to={"/"} className="font-bold">
+                Home
+              </Link>
             </li>
             <li>
-              <Link to={'/about'} className="font-bold">About</Link>
+              <Link to={"/about"} className="font-bold">
+                About
+              </Link>
             </li>
             <li>
-              <Link to={'/services'} className="font-bold">Service</Link>
+              <Link to={"/services"} className="font-bold">
+                Service
+              </Link>
             </li>
             <li>
-              <Link to={'/blog'} className="font-bold">Blog</Link>
+              <Link to={"/blog"} className="font-bold">
+                Blog
+              </Link>
             </li>
             <li>
-              <Link to={'/contact'} className="font-bold">Contact</Link>
+              <Link to={"/contact"} className="font-bold">
+                Contact
+              </Link>
             </li>
+            {user ? (
+            <li>
+              <button onClick={handleLogOut} className="font-bold">LogOut</button>
+              <Link className="font-bold" to={'/bookings'}>My Bookings</Link>
+            </li>
+          ) : (
+            <li>
+              <Link to={'/login'}><button  className="font-bold">Login</button></Link>
+            </li>
+          )}
           </ul>
         </div>
         <Link to={"/"}>
@@ -54,27 +86,47 @@ const NabBar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <Link to={'/'} className="font-bold">Home</Link>
+            <Link to={"/"} className="font-bold">
+              Home
+            </Link>
           </li>
           <li>
-            <Link to={'/about'} className="font-bold">About</Link>
+            <Link to={"/about"} className="font-bold">
+              About
+            </Link>
           </li>
           <li>
-            <Link to={'/service'} className="font-bold">Service</Link>
+            <Link to={"/service"} className="font-bold">
+              Service
+            </Link>
           </li>
           <li>
-            <Link to={'/blog'} className="font-bold">Blog</Link>
+            <Link to={"/blog"} className="font-bold">
+              Blog
+            </Link>
           </li>
           <li>
-            <Link to={'/contact'} className="font-bold">Contact</Link>
+            <Link to={"/contact"} className="font-bold">
+              Contact
+            </Link>
           </li>
+          {user ? (
+            <li>
+              <button onClick={handleLogOut} className="font-bold">LogOut</button>
+              <Link className="font-bold" to={'/bookings'}>My Bookings</Link>
+            </li>
+          ) : (
+            <li>
+              <Link to={'/login'}><button  className="font-bold">Login</button></Link>
+            </li>
+          )}
         </ul>
       </div>
       <div className="navbar-end">
-          <Link className=" btn btn-outline btn-orange">Appointment</Link>
+        <Link className=" btn btn-outline btn-orange">Appointment</Link>
       </div>
     </div>
   );
 };
 
-export default NabBar;
+export default NavBar;
