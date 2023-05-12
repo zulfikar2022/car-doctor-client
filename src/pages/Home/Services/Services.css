@@ -1,0 +1,15 @@
+.service-card-container{
+    /* display: grid;
+    grid-template-columns: 1fr,1fr,1fr;
+    gap: 20px;*/
+} 
+
+.service-card-body{
+    border: 1px solid #ebebeb;
+    border-radius: 10px;
+}
+
+.more-service-btn{
+    margin-left: auto;
+    margin-right: auto;
+}

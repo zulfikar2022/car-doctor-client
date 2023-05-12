@@ -1,0 +1,9 @@
+.form-body{
+    border: 1px solid #a2a2a2;
+    border-radius: 5px;
+}
+
+.login-image{
+    width: 70px;
+    border-radius: 50%;
+}
