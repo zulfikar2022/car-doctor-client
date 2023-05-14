@@ -1,28 +1,66 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import image from "../../assets/images/login/login.svg";
 import "./Login.css";
 import { AuthContext } from "../../Providers/AuthProviders";
 import { useContext } from "react";
 
 const Login = () => {
-  const {signIn,setUser} = useContext(AuthContext);
-  const handleLogin = (event) => {
+  const { signIn, setUser,googleSignIn } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location?.state?.from?.pathname || "/";
 
+  const handleLogin = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-    // console.log({email,password});
-    signIn(email,password)
-      .then(res => {
-        console.log(res.user);
-        setUser(res.user);
-      })
-      .catch(error =>{
-        console.log(error);
-      }) 
 
-  
+    signIn(email, password)
+      .then((res) => {
+        console.log(res.user);
+        const user = res.user;
+        const loggedUser = {
+          email: user.email,
+        };
+        setUser(res.user);
+        console.log(loggedUser);
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          body: JSON.stringify(loggedUser),
+          headers: { "content-type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("jwt response  ", data);
+            // warning: Local storage is not the best. (It is the second best place to store jwt token. We are using this for simplicity purpose)
+            localStorage.setItem("car-access-token", data.token);
+            navigate(from, { replace: true });
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleGoogleSignIn = () => {
+    console.log("inside from google sign in");
+    googleSignIn()
+      .then((res) => {
+        const loggedUser = res.user;
+        setUser(loggedUser);
+        fetch(`http://localhost:5000/jwt`, {
+          method: "POST",
+          body: JSON.stringify({ email: loggedUser.email }),
+          headers: { "content-type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            localStorage.setItem("car-access-token", data.token);
+            navigate(from);
+          });
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -77,7 +115,7 @@ const Login = () => {
                   src={"https://i.ibb.co/k0kG6GW/facobook-Logo.png"}
                 ></img>
               </Link>
-              <Link>
+              <Link onClick={handleGoogleSignIn}>
                 {" "}
                 <img
                   className="login-image"
@@ -87,7 +125,9 @@ const Login = () => {
             </div>
             <p className="mt-5">
               New in this site?{" "}
-              <Link to='/signup' className="text-error">Please SignUP</Link>{" "}
+              <Link to="/signup" className="text-error">
+                Please SignUP
+              </Link>{" "}
             </p>
           </div>
         </div>

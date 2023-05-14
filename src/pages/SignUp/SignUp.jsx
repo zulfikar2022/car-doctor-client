@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import image from "../../assets/images/login/login.svg";
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/AuthProviders";
-import { updateProfile,getAuth } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 
 const SignUp = () => {
-  const {createUser,auth,setUser} = useContext(AuthContext)
+  const {createUser,auth,setUser,googleSignIn} = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSignUP = event => {
     event.preventDefault();
@@ -26,9 +27,29 @@ const SignUp = () => {
         setUser(null);
       })
       .catch(error => console.log(error))
-
-
   }
+
+  const handleGoogleSignIn = () => {
+    console.log('inside from google sign in');
+    googleSignIn()
+      .then(res => {
+        const loggedUser = res.user;
+        setUser(loggedUser);
+        fetch(`http://localhost:5000/jwt`,{
+          method:'POST',
+          body:JSON.stringify({email:loggedUser.email}),
+          headers:{'content-type':'application/json'}
+        })
+            .then(res => res.json())
+            .then(data => {
+              localStorage.setItem('car-access-token',data.token);
+              navigate('/');
+            })
+      })
+      .catch(error => console.log(error))
+  }
+  
+
   return (
     <div className="hero min-h-screen ">
       <div className="hero-content flex-col lg:flex-row ">
@@ -93,7 +114,7 @@ const SignUp = () => {
                   src={"https://i.ibb.co/k0kG6GW/facobook-Logo.png"}
                 ></img>
               </Link>
-              <Link>
+              <Link onClick={handleGoogleSignIn}>
                 {" "}
                 <img
                   className="login-image"

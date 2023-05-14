@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import ServiceCard from "./ServiceCard";
 import { Link } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const Services = ({allData}) => {
         <p className="text-gray-500 mt-5 px-56 text-xl">
           the majority have suffered alteration in some form, by injected
           humour, or randomized words which do not look even slightly
-          believable.{" "}
+          believable.
         </p>
       </div>
       <div className="grid grid-cols-3 gap-6 my-7 ">

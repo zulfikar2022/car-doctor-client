@@ -1,9 +1,8 @@
 import Swal from "sweetalert2";
-// Swal.fire("Deleted!", "Your file has been deleted.", "success");
 /* eslint-disable no-unused-vars */
-const TableRow = ({ booking,bookings,setBookings }) => {
+const TableRow = ({ booking, bookings, setBookings }) => {
   console.log(booking);
-  const { customerName, price, date, img, service, _id } = booking;
+  const { customerName, price, date, img, service, _id, status } = booking;
   const handleDelete = (id) => {
     console.log("from inside delete  ", id);
     Swal.fire({
@@ -16,21 +15,44 @@ const TableRow = ({ booking,bookings,setBookings }) => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/bookings/${id}`,{
-          method:'DELETE',
+        fetch(`http://localhost:5000/bookings/${id}`, {
+          method: "DELETE",
         })
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
-            if (data.deletedCount ) {
+            if (data.deletedCount) {
               Swal.fire("Deleted!", "Your file has been deleted.", "success");
             }
-            const remaining = bookings.filter(b => b._id !== id);
+            const remaining = bookings.filter((b) => b._id !== id);
             setBookings(remaining);
           });
       }
     });
   };
+
+  const handleBookingConfirm = (id) => {
+    fetch(`http://localhost:5000/bookings/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "confirm" }),
+      headers: { "content-type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.modifiedCount > 0) {
+          //update state
+          const remaining = bookings.filter((booking) => booking._id !== id);
+          const updated = bookings.find((booking) => booking._id === id);
+          updated.status = "confirm";
+          const newBookings = [updated, ...remaining];
+          setBookings(newBookings);
+          Swal.fire('data updated successfully !!!')
+
+        }
+      });
+  };
+
   return (
     <tr>
       <th>
@@ -78,7 +100,16 @@ const TableRow = ({ booking,bookings,setBookings }) => {
       </td>
       <td>{date}</td>
       <th>
-        <button className="btn btn-ghost btn-xs">details</button>
+        {status === "confirm" ? (
+          <span className="font-fold text-red-500">Confirmed</span>
+        ) : (
+          <button
+            onClick={() => handleBookingConfirm(_id)}
+            className="btn btn-ghost btn-xs bg-orange-600 text-white"
+          >
+            Confirm
+          </button>
+        )}
       </th>
     </tr>
   );
